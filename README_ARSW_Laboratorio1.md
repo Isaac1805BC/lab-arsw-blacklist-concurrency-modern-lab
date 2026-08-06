@@ -603,7 +603,9 @@ Complete:
 
 | Student | GitHub username | Main contribution | Relevant commits |
 |---|---|---|---|
-| Pending | Pending | Pending | Pending |
+| Tomas Olaya Diaz | iAxstral | Extended BenchmarkRunner to support SEQUENTIAL, FIXED and VIRTUAL strategies with warmups, equivalence validation and CSV output; executed the 10 mandatory benchmark configurations and documented results and environment. | 31a328b  add my conclusion of the lab
+21798ba  add benchmark results and environment document
+3ea7dd9  feat: implement BenchmarkRunner, equivalence validation and CSV output. |
 | Pending | Pending | Pending | Pending |
 | Pending | Pending | Pending | Pending |
 
