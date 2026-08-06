@@ -537,9 +537,9 @@ Each student must add an individual conclusion of 80 to 120 words.
 
 ### Student 1
 
-**Name:** Pending
+**Name:** TOMAS OLAYA DIAZ 
 
-> Replace this text with the individual conclusion.
+> Durante este laboratorio implementé el BenchmarkRunner, agregando soporte para las tres estrategias secuencial, pool fijo y virtual threads, validación automática de equivalencia entre ejecuciones, y generación de datos en el formato CSV el cual se pedia en los requerimientos del laboratorio. Lo que más me sorprendió fue que, sin latencia simulada, las estrategias concurrentes resultaron más lentas que la secuencial es decir speedup menor a 1, porque el costo de crear y coordinar tareas superó el trabajo real, casi instantáneo. En cambio, con I/O simulado, los virtual threads alcanzaron un speedup de casi 54x frente a la secuencial, mientras que el pool fijo se estancó al pasar de 4 a 8 hilos. Esto me dejó claro que la concurrencia no siempre mejora el rendimiento: depende completamente de si el trabajo es de espera (I/O) o de cómputo local. 
 
 ### Student 2
 
