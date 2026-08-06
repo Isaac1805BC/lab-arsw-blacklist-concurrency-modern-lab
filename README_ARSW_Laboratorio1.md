@@ -480,10 +480,21 @@ Answer every question with evidence from the experiment.
 
 ### 15.1 Correctness
 
-1. How did the team verify that the three strategies produce equivalent results?
+1. How did the team verify that the three strategies produce equivalent results? 
+
+Answer: BenchmarkRunner runs the search once at the start to get a reference result, then compares every warm-up and measured run against it. If matches or the count of consulted providers ever differ, it throws an exception right away. We also checked manually: all three strategies returned the exact same matches [10, 23, 36, 49, 62, 75, 88] and consulted all 100 providers, across every configuration we ran.
+
 2. Why can concurrent tasks return matches in a different order?
+
+Answer: Each provider is checked in its own task, and the thread scheduler decides which one finishes first — that depends on timing, not on submission order. Sequential execution always goes provider by provider, so it's the only one with a guaranteed order.
+
 3. What mechanism or design prevented lost or duplicated matches?
+
+Answer: Each task only handles one provider and returns one result at most. Nothing gets written to a shared list until all tasks are done and we collect the results with Future.get(), so there's no race condition. We also sort the final list before returning it, which keeps the order consistent no matter which task finished first.
+
 4. Why should performance not be compared before proving functional equivalence?
+
+Answer: A fast result that's wrong is worse than useless — it can look like a win while actually skipping work or losing data. That's why we check correctness on every run, not just once: speed only matters once we know the answer is right.
 
 ### 15.2 Fixed thread pool
 
