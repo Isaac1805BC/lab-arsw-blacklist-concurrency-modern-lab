@@ -589,14 +589,13 @@ Complete:
 
 | Item | Value |
 |---|---|
-| Operating system | Pending |
-| CPU model | Pending |
-| Logical processors | Pending |
-| RAM | Pending |
-| JDK vendor and version | Pending |
-| Maven version | Pending |
-| Measurement date | Pending |
-
+| Operating system | Windows 11 |
+| CPU model | Intel Core i5 (13th Gen) |
+| Logical processors | 12 |
+| RAM | 8 GB |
+| JDK vendor and version | Microsoft Build of OpenJDK 21.0.6 |
+| Maven version | Apache Maven 3.9.16 |
+| Measurement date | 2026-08-06 |
 ---
 
 ## 20. Team members and contribution evidence
@@ -732,7 +731,7 @@ Complete the following table:
 
 | Tool | Purpose | Main prompts or activities | Validation performed | Changes made by the team |
 |---|---|---|---|---|
-| Claude (Anthropic) | Support for implementing `BenchmarkRunner` (Task 4) | understanding concurrency concepts, and troubleshooting Git/environment setup. | - Explained concurrency, parallelism and Amdahl's Law concepts from Week 1.<br>- Guided the extension of `BenchmarkRunner` to support SEQUENTIAL/FIXED/VIRTUAL strategies, warm-ups, equivalence validation and CSV output. | - Reviewed metrics for consistency with theory (e.g., speedup near pool size for FIXED, diminishing returns from pool-4 to pool-8). | Equivalence-validation logic and CSV format were checked against the README contract before acceptance. |
+| Claude (Anthropic) | Support for implementing `BenchmarkRunner` (Task 4), understanding concurrency concepts, and troubleshooting Git/environment setup. | - Explained concurrency, parallelism and Amdahl's Law concepts from Week 1.<br>- Guided the extension of `BenchmarkRunner` to support SEQUENTIAL/FIXED/VIRTUAL strategies, warm-ups, equivalence validation and CSV output. | - Reviewed metrics for consistency with theory (e.g., speedup near pool size for FIXED, diminishing returns from pool-4 to pool-8). | Equivalence-validation logic and CSV format were checked against the README contract before acceptance. |
 
 Requirements:
 
