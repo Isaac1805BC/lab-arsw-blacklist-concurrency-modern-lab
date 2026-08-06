@@ -732,7 +732,7 @@ Complete the following table:
 
 | Tool | Purpose | Main prompts or activities | Validation performed | Changes made by the team |
 |---|---|---|---|---|
-| Pending | Pending | Pending | Pending | Pending |
+| Claude (Anthropic) | Support for implementing `BenchmarkRunner` (Task 4) | understanding concurrency concepts, and troubleshooting Git/environment setup. | - Explained concurrency, parallelism and Amdahl's Law concepts from Week 1.<br>- Guided the extension of `BenchmarkRunner` to support SEQUENTIAL/FIXED/VIRTUAL strategies, warm-ups, equivalence validation and CSV output. | - Reviewed metrics for consistency with theory (e.g., speedup near pool size for FIXED, diminishing returns from pool-4 to pool-8). | Equivalence-validation logic and CSV format were checked against the README contract before acceptance. |
 
 Requirements:
 
