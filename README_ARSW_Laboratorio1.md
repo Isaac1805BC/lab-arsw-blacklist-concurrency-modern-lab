@@ -480,10 +480,21 @@ Answer every question with evidence from the experiment.
 
 ### 15.1 Correctness
 
-1. How did the team verify that the three strategies produce equivalent results?
+1. How did the team verify that the three strategies produce equivalent results? 
+
+Answer: BenchmarkRunner runs the search once at the start to get a reference result, then compares every warm-up and measured run against it. If matches or the count of consulted providers ever differ, it throws an exception right away. We also checked manually: all three strategies returned the exact same matches [10, 23, 36, 49, 62, 75, 88] and consulted all 100 providers, across every configuration we ran.
+
 2. Why can concurrent tasks return matches in a different order?
+
+Answer: Each provider is checked in its own task, and the thread scheduler decides which one finishes first — that depends on timing, not on submission order. Sequential execution always goes provider by provider, so it's the only one with a guaranteed order.
+
 3. What mechanism or design prevented lost or duplicated matches?
+
+Answer: Each task only handles one provider and returns one result at most. Nothing gets written to a shared list until all tasks are done and we collect the results with Future.get(), so there's no race condition. We also sort the final list before returning it, which keeps the order consistent no matter which task finished first.
+
 4. Why should performance not be compared before proving functional equivalence?
+
+Answer: A fast result that's wrong is worse than useless — it can look like a win while actually skipping work or losing data. That's why we check correctness on every run, not just once: speed only matters once we know the answer is right.
 
 ### 15.2 Fixed thread pool
 
@@ -537,9 +548,9 @@ Each student must add an individual conclusion of 80 to 120 words.
 
 ### Student 1
 
-**Name:** Pending
+**Name:** TOMAS OLAYA DIAZ 
 
-> Replace this text with the individual conclusion.
+> Durante este laboratorio implementé el BenchmarkRunner, agregando soporte para las tres estrategias secuencial, pool fijo y virtual threads, validación automática de equivalencia entre ejecuciones, y generación de datos en el formato CSV el cual se pedia en los requerimientos del laboratorio. Lo que más me sorprendió fue que, sin latencia simulada, las estrategias concurrentes resultaron más lentas que la secuencial es decir speedup menor a 1, porque el costo de crear y coordinar tareas superó el trabajo real, casi instantáneo. En cambio, con I/O simulado, los virtual threads alcanzaron un speedup de casi 54x frente a la secuencial, mientras que el pool fijo se estancó al pasar de 4 a 8 hilos. Esto me dejó claro que la concurrencia no siempre mejora el rendimiento: depende completamente de si el trabajo es de espera (I/O) o de cómputo local. 
 
 ### Student 2
 
@@ -589,21 +600,22 @@ Complete:
 
 | Item | Value |
 |---|---|
-| Operating system | Pending |
-| CPU model | Pending |
-| Logical processors | Pending |
-| RAM | Pending |
-| JDK vendor and version | Pending |
-| Maven version | Pending |
-| Measurement date | Pending |
-
+| Operating system | Windows 11 |
+| CPU model | Intel Core i5 (13th Gen) |
+| Logical processors | 12 |
+| RAM | 8 GB |
+| JDK vendor and version | Microsoft Build of OpenJDK 21.0.6 |
+| Maven version | Apache Maven 3.9.16 |
+| Measurement date | 2026-08-06 |
 ---
 
 ## 20. Team members and contribution evidence
 
 | Student | GitHub username | Main contribution | Relevant commits |
 |---|---|---|---|
-| Pending | Pending | Pending | Pending |
+| Tomas Olaya Diaz | iAxstral | Extended BenchmarkRunner to support SEQUENTIAL, FIXED and VIRTUAL strategies with warmups, equivalence validation and CSV output; executed the 10 mandatory benchmark configurations and documented results and environment. | 31a328b  add my conclusion of the lab
+21798ba  add benchmark results and environment document
+3ea7dd9  feat: implement BenchmarkRunner, equivalence validation and CSV output. |
 | Pending | Pending | Pending | Pending |
 | Pending | Pending | Pending | Pending |
 
@@ -730,7 +742,7 @@ Complete the following table:
 
 | Tool | Purpose | Main prompts or activities | Validation performed | Changes made by the team |
 |---|---|---|---|---|
-| Pending | Pending | Pending | Pending | Pending |
+| Claude (Anthropic) | Support for implementing `BenchmarkRunner` (Task 4), understanding concurrency concepts, and troubleshooting Git/environment setup. | - Explained concurrency, parallelism and Amdahl's Law concepts from Week 1.<br>- Guided the extension of `BenchmarkRunner` to support SEQUENTIAL/FIXED/VIRTUAL strategies, warm-ups, equivalence validation and CSV output. | - Reviewed metrics for consistency with theory (e.g., speedup near pool size for FIXED, diminishing returns from pool-4 to pool-8). | Equivalence-validation logic and CSV format were checked against the README contract before acceptance. |
 
 Requirements:
 
