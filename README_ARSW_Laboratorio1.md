@@ -445,16 +445,16 @@ Complete this table with actual measurements:
 
 | Scenario | Strategy | Pool size | Average ms | Minimum ms | Maximum ms | Speedup | Matches | Consulted |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
-| No simulated I/O | Sequential | — | Pending | Pending | Pending | 1.00 | Pending | Pending |
-| No simulated I/O | Fixed pool | 2 | Pending | Pending | Pending | Pending | Pending | Pending |
-| No simulated I/O | Fixed pool | 4 | Pending | Pending | Pending | Pending | Pending | Pending |
-| No simulated I/O | Fixed pool | 8 | Pending | Pending | Pending | Pending | Pending | Pending |
-| No simulated I/O | Virtual threads | — | Pending | Pending | Pending | Pending | Pending | Pending |
-| Simulated I/O | Sequential | — | Pending | Pending | Pending | 1.00 | Pending | Pending |
-| Simulated I/O | Fixed pool | 2 | Pending | Pending | Pending | Pending | Pending | Pending |
-| Simulated I/O | Fixed pool | 4 | Pending | Pending | Pending | Pending | Pending | Pending |
-| Simulated I/O | Fixed pool | 8 | Pending | Pending | Pending | Pending | Pending | Pending |
-| Simulated I/O | Virtual threads | — | Pending | Pending | Pending | Pending | Pending | Pending |
+| No simulated I/O | Sequential | — | 0.020 | 0.013 | 0.037 | 1.00 | 7 | 100 |
+| No simulated I/O | Fixed pool | 2 | 1.025 | 0.684 | 1.596 | 0.02 | 7 | 100 |
+| No simulated I/O | Fixed pool | 4 | 1.035 | 0.540 | 1.383 | 0.02 | 7 | 100 |
+| No simulated I/O | Fixed pool | 8 | 2.848 | 2.229 | 3.631 | 0.01 | 7 | 100 |
+| No simulated I/O | Virtual threads | — | 1.117 | 0.722 | 2.318 | 0.02 | 7 | 100 |
+| Simulated I/O | Sequential | — | 11038.810 | 11013.471 | 11065.869 | 1.00 | 7 | 100 |
+| Simulated I/O | Fixed pool | 2 | 5524.569 | 5511.102 | 5566.279 | 2.00 | 7 | 100 |
+| Simulated I/O | Fixed pool | 4 | 2828.639 | 2826.499 | 2830.948 | 3.90 | 7 | 100 |
+| Simulated I/O | Fixed pool | 8 | 1469.871 | 1468.798 | 1472.166 | 7.51 | 7 | 100 |
+| Simulated I/O | Virtual threads | — | 205.158 | 199.505 | 214.991 | 53.81 | 7 | 100 |
 
 Also include the raw measurements in:
 
