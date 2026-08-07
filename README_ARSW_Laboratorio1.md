@@ -554,9 +554,9 @@ Each student must add an individual conclusion of 80 to 120 words.
 
 ### Student 2
 
-**Name:** Pending
+**Name:** Isaac Burgos
 
-> Replace this text with the individual conclusion.
+> En este laboratorio implementé las estrategias concurrentes `FixedPoolBlackListSearch` y `VirtualThreadBlackListSearch`, ambas usando un `ExecutorService`: un pool fijo de hilos de plataforma en el primer caso, y `Executors.newVirtualThreadPerTaskExecutor()` en el segundo. El diseño evita estado compartido mutable, ya que cada tarea consulta un único proveedor y devuelve su propio resultado, así que no hizo falta sincronización explícita. Los resultados se ordenan al final para garantizar determinismo frente al orden no determinista de finalización de las tareas. Al verificar contra el baseline secuencial confirmé que las tres estrategias producen exactamente los mismos matches y consultan los 100 proveedores. Lo que más reforzó mi entendimiento fue ver, con datos reales, que sin I/O simulado la concurrencia resulta más lenta que la secuencial, porque el costo de crear y coordinar hilos supera un cálculo local casi instantáneo. Con I/O bloqueante, en cambio, los virtual threads llegaron a un speedup de casi 54x. Eso deja claro que la estrategia correcta depende del tipo de carga, no de una regla general.
 
 ### Student 3
 
