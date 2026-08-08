@@ -540,12 +540,24 @@ Answer: Virtual threads are lightweight, but they still have some overhead for c
 ### 15.4 Architectural decision
 
 14. Which strategy would the team recommend for a system dominated by blocking external calls?
+
+Answer: The team would recommend virtual threads. They gave the best result in the simulated-I/O scenario, with a 53.81x speedup compared with Sequential. They also performed much better than all the fixed-pool configurations we tested. Another advantage is that we do not have to spend as much time deciding the right pool size for this type of workload.
+
 15. Which strategy would the team recommend for a small local workload?
+
+Answer: For a small local workload, the team would recommend Sequential execution. In the no-I/O scenario, it was the fastest option, with an average time of only 0.020 ms. All the concurrent options, including Fixed(2), Fixed(4), Fixed(8), and Virtual, were slower because the extra overhead of creating and coordinating threads was greater than the small amount of work being done.
+
 16. Under what conditions would a fixed pool still be preferable?
+
+Answer: A fixed pool would still be useful when the application cannot use Java 21 virtual threads or when we need more control over the number of concurrent operations. For example, an external service might only allow a certain number of requests at the same time. With `Executors.newFixedThreadPool(n)`, we can set that limit directly. With a virtual-thread-per-task executor, many tasks can start concurrently, which could put too much load on a service that already has its own limits.
+
 17. What evidence from the measurements supports the recommendation?
+
+Answer: The results in Section 14 support this recommendation. When I/O was present, the fixed-pool speedup increased from 2.00x to 3.90x and then to 7.51x as the pool size increased from 2 to 4 and then to 8 threads. However, this was still far below the 53.81x speedup achieved with virtual threads. In the no-I/O scenario, all the concurrent options were slower than Sequential, which shows that concurrency is not always useful, especially for very small local tasks.
+
 18. What limitations prevent generalizing the conclusion to every production system?
 
-Answers such as “virtual threads are better” or “more threads are faster” are insufficient without conditions and evidence.
+Answer: There are several limitations to these results. First, the benchmark was run on only one machine, with 12 logical processors and 8 GB of RAM, so the results could be different on other hardware. Also, the provider delays were simulated using fixed values between 20 and 200 ms, which does not fully represent real network calls, where latency, failures, and retries can vary. We also tested only one IP address and one alarm threshold, with five measured runs for each configuration. This was enough to see a clear performance trend, but it is not enough to predict how the system would behave under a long period of heavy load or while other processes are using the machine at the same time.
 
 ---
 
@@ -562,9 +574,10 @@ The conclusion must include:
 - At least one trade-off.
 - At least one limitation of the experiment.
 
+
 ### Team conclusion
 
-> Replace this text with the team conclusion.
+> 
 
 ---
 
