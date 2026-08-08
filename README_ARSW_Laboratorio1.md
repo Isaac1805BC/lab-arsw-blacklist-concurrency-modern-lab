@@ -499,27 +499,65 @@ Answer: A fast result that's wrong is worse than useless — it can look like a 
 ### 15.2 Fixed thread pool
 
 5. What changed when the pool increased from 2 to 4 threads?
+
+Answer: With simulated I/O, the average time went down from 5524.569 ms to 2828.639 ms, while the speedup increased from 2.00x to 3.90x. The main reason is that the providers spend most of their time waiting in Thread.sleep() instead of using the CPU. Increasing the pool from 2 to 4 threads allows more of these waiting tasks to run at the same time, which reduces the total execution time.
+
 6. What changed when the pool increased from 4 to 8 threads?
+
+Answer: The average time decreased again, from 2828.639 ms to 1469.871 ms, and the speedup increased from 3.90x to 7.51x. We can see a similar improvement to the previous step, from 2 to 4 threads. Since the test machine has 12 logical processors (see Section 19), using 8 threads is still reasonable and allows more tasks to run at the same time without creating too much competition for the CPU.
+
 7. Was the improvement proportional to the number of threads? Explain.
+
+Answer: For the simulated-I/O case, the improvement was fairly close to proportional. When the pool size was doubled from 2 to 4 and then from 4 to 8 threads, the execution time was roughly cut in half each time. This is because the workload is I/O-bound, so the threads spend most of their time waiting instead of using the CPU. Adding more threads allows more waiting tasks to happen at the same time. However, this doesn't happen in the no-I/O case. The results were Fixed(2) = 1.025 ms, Fixed(4) = 1.035 ms, and Fixed(8) = 2.848 ms. In this case, adding more threads actually made the program slower. Since there is no waiting to overlap and the actual work is just a small hash computation, the extra threads mainly add scheduling and coordination overhead.
+
 8. What costs are introduced by task creation, scheduling, context switching, and result consolidation?
+
+Answer: Using multiple threads introduces some additional overhead. Creating the `ExecutorService` and the `Callable` tasks requires object allocation, and the JVM and operating system have to schedule those tasks and assign them to the available threads. When too many threads are running at the same time, context switching can also add extra work for the system. After that, the program still has to collect the results using `Future.get()` and sort the final list. These costs become more noticeable in the no-I/O case because the actual work is very small. The hash computation finishes quickly, so the time spent creating, scheduling, and coordinating the tasks can be significant compared with the time spent doing the actual computation.
+
 9. What would happen if the pool size were much larger than the available platform threads?
+
+Answer: The performance would most likely get worse instead of better. Each platform thread requires operating system resources, including memory for its stack and other thread-related structures. If there are many more threads than available CPU cores, the operating system has to spend more time switching between them instead of doing useful work. If the number of threads becomes too large, the program can also run into resource limitations such as high memory usage. This is one of the reasons virtual threads are useful for applications with a large number of I/O-bound tasks, since they can handle many concurrent waiting operations with less overhead than creating the same number of platform threads.
+
 
 ### 15.3 Virtual threads
 
 10. In which scenario did virtual threads provide the clearest benefit?
+
+Answer: Virtual threads showed the biggest improvement in the simulated-I/O scenario. They achieved an average time of 205.158 ms, which is a 53.81x speedup compared with Sequential. This was also much better than the best fixed-pool result, which was Fixed(8) with a 7.51x speedup. The main reason is that the workload spends most of its time waiting. Virtual threads allow all 100 provider consultations to run concurrently without requiring 100 real operating system threads.
+
 11. Why are virtual threads especially relevant for blocking operations?
+
+Answer: Virtual threads are especially useful when a program has many blocking operations. When a virtual thread reaches something that makes it wait, such as Thread.sleep() or network I/O, the JVM can temporarily remove it from its carrier thread. That carrier thread can then be used to run another virtual thread instead of staying blocked. This makes it possible to have thousands of tasks waiting at the same time while using a much smaller number of real OS threads. This fits our workload well because most of the time is spent waiting for the simulated external service.
+
 12. Why do virtual threads not make local CPU work automatically faster?
+
+Answer: Virtual threads mainly help reduce the cost of waiting; they don't make CPU computations faster. CPU-bound work still needs to run on actual CPU cores, and changing the type of thread doesn't increase the number of available cores. In the results that we have is clearly in the no-I/O scenario, Virtual averaged 1.117 ms, while Sequential only took 0.020 ms. In this case, the work is just a small hash computation with no waiting, so the overhead of creating and scheduling the virtual threads is greater than the benefit of running the tasks concurrently.
+
 13. What trade-offs remain even when virtual threads are lightweight?
+
+Answer: Virtual threads are lightweight, but they still have some overhead for creation and scheduling. Because of this, very small CPU-bound tasks can still be faster when executed sequentially, as we saw in the no-I/O results. For larger CPU-bound workloads, virtual threads also cannot create more computing power than the machine actually has, since the work still has to run on a limited number of CPU cores.
 
 ### 15.4 Architectural decision
 
 14. Which strategy would the team recommend for a system dominated by blocking external calls?
+
+Answer: The team would recommend virtual threads. They gave the best result in the simulated-I/O scenario, with a 53.81x speedup compared with Sequential. They also performed much better than all the fixed-pool configurations we tested. Another advantage is that we do not have to spend as much time deciding the right pool size for this type of workload.
+
 15. Which strategy would the team recommend for a small local workload?
+
+Answer: For a small local workload, the team would recommend Sequential execution. In the no-I/O scenario, it was the fastest option, with an average time of only 0.020 ms. All the concurrent options, including Fixed(2), Fixed(4), Fixed(8), and Virtual, were slower because the extra overhead of creating and coordinating threads was greater than the small amount of work being done.
+
 16. Under what conditions would a fixed pool still be preferable?
+
+Answer: A fixed pool would still be useful when the application cannot use Java 21 virtual threads or when we need more control over the number of concurrent operations. For example, an external service might only allow a certain number of requests at the same time. With `Executors.newFixedThreadPool(n)`, we can set that limit directly. With a virtual-thread-per-task executor, many tasks can start concurrently, which could put too much load on a service that already has its own limits.
+
 17. What evidence from the measurements supports the recommendation?
+
+Answer: The results in Section 14 support this recommendation. When I/O was present, the fixed-pool speedup increased from 2.00x to 3.90x and then to 7.51x as the pool size increased from 2 to 4 and then to 8 threads. However, this was still far below the 53.81x speedup achieved with virtual threads. In the no-I/O scenario, all the concurrent options were slower than Sequential, which shows that concurrency is not always useful, especially for very small local tasks.
+
 18. What limitations prevent generalizing the conclusion to every production system?
 
-Answers such as “virtual threads are better” or “more threads are faster” are insufficient without conditions and evidence.
+Answer: There are several limitations to these results. First, the benchmark was run on only one machine, with 12 logical processors and 8 GB of RAM, so the results could be different on other hardware. Also, the provider delays were simulated using fixed values between 20 and 200 ms, which does not fully represent real network calls, where latency, failures, and retries can vary. We also tested only one IP address and one alarm threshold, with five measured runs for each configuration. This was enough to see a clear performance trend, but it is not enough to predict how the system would behave under a long period of heavy load or while other processes are using the machine at the same time.
 
 ---
 
@@ -536,9 +574,10 @@ The conclusion must include:
 - At least one trade-off.
 - At least one limitation of the experiment.
 
+
 ### Team conclusion
 
-> Replace this text with the team conclusion.
+> In this experiment, most of the work was I/O-bound because the provider consultations spent much more time waiting than actually using the CPU. The results show that virtual threads were the best option for this type of workload. They achieved a 53.81x speedup compared with sequential execution, while the best fixed-pool configuration reached 7.51x with 8 threads. This happened because virtual threads can handle many blocking operations at the same time without needing the same number of real OS threads. However, the results were very different for the no-I/O case. In that scenario, both the fixed pools and virtual threads were slower than sequential execution. Since the computation was very small, the overhead of creating and coordinating threads was greater than the benefit of running them concurrently. Based on these results, we would not recommend one strategy for every situation. Virtual threads are a good choice when the workload is mainly waiting on external or blocking I/O, while sequential execution can be better for small CPU-bound tasks. Fixed thread pools are still useful when we need to control the exact number of concurrent requests, especially when an external service has rate limits.
 
 ---
 
@@ -560,9 +599,9 @@ Each student must add an individual conclusion of 80 to 120 words.
 
 ### Student 3
 
-**Name:** Pending
+**Name:** Javier Romero
 
-> Replace this text with the individual conclusion.
+> En este laboratorio implementé la suite de pruebas automatizadas que valida la equivalencia funcional entre las cinco estrategias (`Sequential`, `FixedPool` (2/4/8) y `Virtual Threads`), utilizando tanto la latencia simulada como sin ella. Cada test compara los `matchingProviderIds` y el conteo de los proveedores consultados contra la línea de base secuencial, además verifico la ausencia de duplicados, el orden ascendente y la validación de los argumentos inválidos. Aprendí a balancear los tamaños de los datos de pruebas (20 vs 100 proveedores) debido a que esto aumenta el tiempo en el que se ejecutan las pruebas, gracias a esto se puede confirmar que cada proveedor extra es una espera adicional, se ve cuando se hace `Threed.sleap()` en `IsBlacklisted`, entonces cambiar de 20 a 100 proveedores en el test de equivalencia con I/O se reduce el tiempo de la prueba sin reducir la capacidad de la prueba en detectar un bug de correción, porque esa capacidad que se cambia no depende la escala para este ejercicio.
 
 ---
 
