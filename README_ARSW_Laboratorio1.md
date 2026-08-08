@@ -522,9 +522,20 @@ Answer: The performance would most likely get worse instead of better. Each plat
 ### 15.3 Virtual threads
 
 10. In which scenario did virtual threads provide the clearest benefit?
+
+Answer: Virtual threads showed the biggest improvement in the simulated-I/O scenario. They achieved an average time of 205.158 ms, which is a 53.81x speedup compared with Sequential. This was also much better than the best fixed-pool result, which was Fixed(8) with a 7.51x speedup. The main reason is that the workload spends most of its time waiting. Virtual threads allow all 100 provider consultations to run concurrently without requiring 100 real operating system threads.
+
 11. Why are virtual threads especially relevant for blocking operations?
+
+Answer: Virtual threads are especially useful when a program has many blocking operations. When a virtual thread reaches something that makes it wait, such as Thread.sleep() or network I/O, the JVM can temporarily remove it from its carrier thread. That carrier thread can then be used to run another virtual thread instead of staying blocked. This makes it possible to have thousands of tasks waiting at the same time while using a much smaller number of real OS threads. This fits our workload well because most of the time is spent waiting for the simulated external service.
+
 12. Why do virtual threads not make local CPU work automatically faster?
+
+Answer: Virtual threads mainly help reduce the cost of waiting; they don't make CPU computations faster. CPU-bound work still needs to run on actual CPU cores, and changing the type of thread doesn't increase the number of available cores. In the results that we have is clearly in the no-I/O scenario, Virtual averaged 1.117 ms, while Sequential only took 0.020 ms. In this case, the work is just a small hash computation with no waiting, so the overhead of creating and scheduling the virtual threads is greater than the benefit of running the tasks concurrently.
+
 13. What trade-offs remain even when virtual threads are lightweight?
+
+Answer: Virtual threads are lightweight, but they still have some overhead for creation and scheduling. Because of this, very small CPU-bound tasks can still be faster when executed sequentially, as we saw in the no-I/O results. For larger CPU-bound workloads, virtual threads also cannot create more computing power than the machine actually has, since the work still has to run on a limited number of CPU cores.
 
 ### 15.4 Architectural decision
 
