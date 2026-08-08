@@ -577,7 +577,7 @@ The conclusion must include:
 
 ### Team conclusion
 
-> 
+> In this experiment, most of the work was I/O-bound because the provider consultations spent much more time waiting than actually using the CPU. The results show that virtual threads were the best option for this type of workload. They achieved a 53.81x speedup compared with sequential execution, while the best fixed-pool configuration reached 7.51x with 8 threads. This happened because virtual threads can handle many blocking operations at the same time without needing the same number of real OS threads. However, the results were very different for the no-I/O case. In that scenario, both the fixed pools and virtual threads were slower than sequential execution. Since the computation was very small, the overhead of creating and coordinating threads was greater than the benefit of running them concurrently. Based on these results, we would not recommend one strategy for every situation. Virtual threads are a good choice when the workload is mainly waiting on external or blocking I/O, while sequential execution can be better for small CPU-bound tasks. Fixed thread pools are still useful when we need to control the exact number of concurrent requests, especially when an external service has rate limits.
 
 ---
 
