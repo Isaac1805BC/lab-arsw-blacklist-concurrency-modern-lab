@@ -831,22 +831,22 @@ Analyze:
 
 Before submission, verify:
 
-- [ ] The project uses Java 21.
-- [ ] `mvn clean test` passes.
-- [ ] Fixed pools of 2, 4, and 8 threads work.
-- [ ] The virtual-thread strategy works.
-- [ ] All mandatory strategies return equivalent results.
-- [ ] Results are ordered and contain no duplicates.
-- [ ] The benchmark runner supports the required arguments.
-- [ ] Two warm-ups and five measured runs were executed.
-- [ ] All ten required configurations were measured.
-- [ ] `results/results.csv` contains raw measurements.
-- [ ] The environment is documented.
-- [ ] The results table is complete.
-- [ ] All analysis questions are answered.
-- [ ] The team conclusion is complete.
-- [ ] Every student added an individual conclusion.
-- [ ] Every student has meaningful commits.
-- [ ] AI use is declared.
-- [ ] The `lab-1-final` tag was pushed.
+- [x] The project uses Java 21.
+- [x] `mvn clean test` passes.
+- [x] Fixed pools of 2, 4, and 8 threads work.
+- [x] The virtual-thread strategy works.
+- [x] All mandatory strategies return equivalent results.
+- [x] Results are ordered and contain no duplicates.
+- [x] The benchmark runner supports the required arguments.
+- [x] Two warm-ups and five measured runs were executed.
+- [x] All ten required configurations were measured.
+- [x] `results/results.csv` contains raw measurements.
+- [x] The environment is documented.
+- [x] The results table is complete.
+- [x] All analysis questions are answered.
+- [x] The team conclusion is complete.
+- [x] Every student added an individual conclusion.
+- [x] Every student has meaningful commits.
+- [x] AI use is declared.
+- [x] The `lab-1-final` tag was pushed.
 - [ ] The repository URL was submitted in the institutional platform.
