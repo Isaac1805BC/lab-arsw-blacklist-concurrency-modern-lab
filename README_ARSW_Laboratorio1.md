@@ -560,9 +560,9 @@ Each student must add an individual conclusion of 80 to 120 words.
 
 ### Student 3
 
-**Name:** Pending
+**Name:** Javier Romero
 
-> Replace this text with the individual conclusion.
+> En este laboratorio implementé la suite de pruebas automatizadas que valida la equivalencia funcional entre las cinco estrategias (`Sequential`, `FixedPool` (2/4/8) y `Virtual Threads`), utilizando tanto la latencia simulada como sin ella. Cada test compara los `matchingProviderIds` y el conteo de los proveedores consultados contra la línea de base secuencial, además verifico la ausencia de duplicados, el orden ascendente y la validación de los argumentos inválidos. Aprendí a balancear los tamaños de los datos de pruebas (20 vs 100 proveedores) debido a que esto aumenta el tiempo en el que se ejecutan las pruebas, gracias a esto se puede confirmar que cada proveedor extra es una espera adicional, se ve cuando se hace `Threed.sleap()` en `IsBlacklisted`, entonces cambiar de 20 a 100 proveedores en el test de equivalencia con I/O se reduce el tiempo de la prueba sin reducir la capacidad de la prueba en detectar un bug de correción, porque esa capacidad que se cambia no depende la escala para este ejercicio.
 
 ---
 
