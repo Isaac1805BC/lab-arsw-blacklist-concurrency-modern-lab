@@ -650,13 +650,11 @@ Complete:
 
 ## 20. Team members and contribution evidence
 
-| Student | GitHub username | Main contribution | Relevant commits |
-|---|---|---|---|
-| Tomas Olaya Diaz | iAxstral | Extended BenchmarkRunner to support SEQUENTIAL, FIXED and VIRTUAL strategies with warmups, equivalence validation and CSV output; executed the 10 mandatory benchmark configurations and documented results and environment. | 31a328b  add my conclusion of the lab
-21798ba  add benchmark results and environment document
-3ea7dd9  feat: implement BenchmarkRunner, equivalence validation and CSV output. |
-| Pending | Pending | Pending | Pending |
-| Pending | Pending | Pending | Pending |
+| Student          | GitHub username | Main contribution | Relevant commits |
+|------------------|-----------------|---|---|
+| Tomas Olaya Diaz | iAxstral        | Extended BenchmarkRunner to support SEQUENTIAL, FIXED and VIRTUAL strategies with warmups, equivalence validation and CSV output; executed the 10 mandatory benchmark configurations and documented results and environment. | 31a328b  add my conclusion of the lab21798ba  add benchmark results and environment document3ea7dd9  feat: implement BenchmarkRunner, equivalence validation and CSV output. |
+| Javier Romero    | Deathkiz        | Implemented the automated equivalence test suite (`EquivalenceBlackListSearchTest`) covering all five strategies with and without simulated I/O, duplicate/order checks, and invalid-argument validation; wrote the analysis for Sections 15.2, 15.3, 15.4, the team's final conclusion, and individual conclusion. | 7b17d0c Feat: Test that validate all strategies<br>addb737 Section 15.2<br>0c9fbd0 Docs: Section 15.3<br>75319e9 15.4<br>ebf8c50 Final Conclusion Javier Romero<br>f503a77 Final Conclusion |
+| Isaac Burgos | Isaac1805BC | Implemented `FixedPoolBlackListSearch` and `VirtualThreadBlackListSearch` using `ExecutorService`, avoiding shared mutable state and ensuring deterministic, ordered results; completed Section 14 results table with measured data. | 09d0376 Implement fixed thread pool blacklist search<br>713b917 Implement virtual thread blacklist search<br>3040fc2 Complete section 14 results table with measured data<br>b5ce8bb Add individual conclusion for Isaac Burgos |
 
 Each student must have at least two meaningful commits.
 
