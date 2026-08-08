@@ -499,10 +499,25 @@ Answer: A fast result that's wrong is worse than useless — it can look like a 
 ### 15.2 Fixed thread pool
 
 5. What changed when the pool increased from 2 to 4 threads?
+
+Answer: With simulated I/O, the average time went down from 5524.569 ms to 2828.639 ms, while the speedup increased from 2.00x to 3.90x. The main reason is that the providers spend most of their time waiting in Thread.sleep() instead of using the CPU. Increasing the pool from 2 to 4 threads allows more of these waiting tasks to run at the same time, which reduces the total execution time.
+
 6. What changed when the pool increased from 4 to 8 threads?
+
+Answer: The average time decreased again, from 2828.639 ms to 1469.871 ms, and the speedup increased from 3.90x to 7.51x. We can see a similar improvement to the previous step, from 2 to 4 threads. Since the test machine has 12 logical processors (see Section 19), using 8 threads is still reasonable and allows more tasks to run at the same time without creating too much competition for the CPU.
+
 7. Was the improvement proportional to the number of threads? Explain.
+
+Answer: For the simulated-I/O case, the improvement was fairly close to proportional. When the pool size was doubled from 2 to 4 and then from 4 to 8 threads, the execution time was roughly cut in half each time. This is because the workload is I/O-bound, so the threads spend most of their time waiting instead of using the CPU. Adding more threads allows more waiting tasks to happen at the same time. However, this doesn't happen in the no-I/O case. The results were Fixed(2) = 1.025 ms, Fixed(4) = 1.035 ms, and Fixed(8) = 2.848 ms. In this case, adding more threads actually made the program slower. Since there is no waiting to overlap and the actual work is just a small hash computation, the extra threads mainly add scheduling and coordination overhead.
+
 8. What costs are introduced by task creation, scheduling, context switching, and result consolidation?
+
+Answer: Using multiple threads introduces some additional overhead. Creating the `ExecutorService` and the `Callable` tasks requires object allocation, and the JVM and operating system have to schedule those tasks and assign them to the available threads. When too many threads are running at the same time, context switching can also add extra work for the system. After that, the program still has to collect the results using `Future.get()` and sort the final list. These costs become more noticeable in the no-I/O case because the actual work is very small. The hash computation finishes quickly, so the time spent creating, scheduling, and coordinating the tasks can be significant compared with the time spent doing the actual computation.
+
 9. What would happen if the pool size were much larger than the available platform threads?
+
+Answer: The performance would most likely get worse instead of better. Each platform thread requires operating system resources, including memory for its stack and other thread-related structures. If there are many more threads than available CPU cores, the operating system has to spend more time switching between them instead of doing useful work. If the number of threads becomes too large, the program can also run into resource limitations such as high memory usage. This is one of the reasons virtual threads are useful for applications with a large number of I/O-bound tasks, since they can handle many concurrent waiting operations with less overhead than creating the same number of platform threads.
+
 
 ### 15.3 Virtual threads
 
