@@ -616,7 +616,10 @@ Complete:
 | Tomas Olaya Diaz | iAxstral | Extended BenchmarkRunner to support SEQUENTIAL, FIXED and VIRTUAL strategies with warmups, equivalence validation and CSV output; executed the 10 mandatory benchmark configurations and documented results and environment. | 31a328b  add my conclusion of the lab
 21798ba  add benchmark results and environment document
 3ea7dd9  feat: implement BenchmarkRunner, equivalence validation and CSV output. |
-| Pending | Pending | Pending | Pending |
+| Isaac Burgos | Isaac1805BC | Implemented FixedPoolBlackListSearch and VirtualThreadBlackListSearch; completed the section 14 results table from the measured CSV data and wrote the individual conclusion. | 09d0376  Implement fixed thread pool blacklist search
+713b917  Implement virtual thread blacklist search
+3040fc2  Complete section 14 results table with measured data
+b5ce8bb  Add individual conclusion for Isaac Burgos (Student 2) |
 | Pending | Pending | Pending | Pending |
 
 Each student must have at least two meaningful commits.
